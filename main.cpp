@@ -1,8 +1,16 @@
 #include <iostream>
 #include <limits>
+#include <string>
 using namespace std;
 
 int main() {
+    const int MAX_MOKINIAI = 100;
+    const int MAX_PAZYMIAI = 10;
+
+    string vardai[MAX_MOKINIAI];
+    int pazymiai[MAX_MOKINIAI][MAX_PAZYMIAI] = {};
+    int pazymiuKiekiai[MAX_MOKINIAI] = {};
+    int mokiniuKiekis = 0;
     int veiksmas = 0;
 
     do {
@@ -24,13 +32,94 @@ int main() {
         }
 
         switch (veiksmas) {
-            case 1:
-                cout << "Pasirinktas mokinio ivedimas.\n";
-                break;
+            case 1: {
+                if (mokiniuKiekis >= MAX_MOKINIAI) {
+                    cout << "Pasiektas 100 mokiniu limitas.\n";
+                    break;
+                }
 
-            case 2:
-                cout << "Pasirinkta visu mokiniu perziura.\n";
+                cout << "Iveskite mokinio varda: ";
+                cin >> vardai[mokiniuKiekis];
+
+                int kiekis = 0;
+
+                while (true) {
+                    cout << "Kiek pazymiu norite ivesti (nuo 0 iki 10): ";
+
+                    if (!(cin >> kiekis)) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Klaida: reikia ivesti sveikaji skaiciu.\n";
+                        continue;
+                    }
+
+                    if (kiekis < 0 || kiekis > MAX_PAZYMIAI) {
+                        cout << "Neteisingas kiekis. Iveskite skaiciu nuo 0 iki 10.\n";
+                        continue;
+                    }
+
+                    break;
+                }
+
+                for (int i = 0; i < kiekis; i++) {
+                    int pazymys = 0;
+
+                    while (true) {
+                        cout << "Iveskite " << i + 1 << " pazymi (nuo 1 iki 10): ";
+
+                        if (!(cin >> pazymys)) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Klaida: reikia ivesti sveikaji skaiciu.\n";
+                            continue;
+                        }
+
+                        if (pazymys < 1 || pazymys > 10) {
+                            cout << "Neteisingas pazymys. Iveskite skaiciu nuo 1 iki 10.\n";
+                            continue;
+                        }
+
+                        break;
+                    }
+
+                    pazymiai[mokiniuKiekis][i] = pazymys;
+                }
+
+                pazymiuKiekiai[mokiniuKiekis] = kiekis;
+                mokiniuKiekis++;
+
+                cout << "Mokinys sekmingai pridetas.\n";
                 break;
+            }
+
+            case 2: {
+                if (mokiniuKiekis == 0) {
+                    cout << "Mokiniu sarasas tuscias.\n";
+                    break;
+                }
+
+                cout << "\n--- MOKINIU PAZYMIAI ---\n";
+
+                for (int i = 0; i < mokiniuKiekis; i++) {
+                    cout << i + 1 << ". " << vardai[i] << ": ";
+
+                    if (pazymiuKiekiai[i] == 0) {
+                        cout << "pazymiu neturi";
+                    } else {
+                        for (int j = 0; j < pazymiuKiekiai[i]; j++) {
+                            cout << pazymiai[i][j];
+
+                            if (j < pazymiuKiekiai[i] - 1) {
+                                cout << ", ";
+                            }
+                        }
+                    }
+
+                    cout << "\n";
+                }
+
+                break;
+            }
 
             case 3:
                 cout << "Pasirinkta vieno mokinio perziura.\n";
