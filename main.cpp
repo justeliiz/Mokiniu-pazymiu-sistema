@@ -365,9 +365,72 @@ int main() {
                 break;
             }
 
-            case 6:
-                cout << "Pasirinktas mokinio pasalinimas.\n";
+            case 6: {
+                if (mokiniuKiekis == 0) {
+                    cout << "Mokiniu sarasas tuscias.\n";
+                    break;
+                }
+
+                cout << "Mokiniai:\n";
+                for (int i = 0; i < mokiniuKiekis; i++) {
+                    cout << i + 1 << ". " << vardai[i] << "\n";
+                }
+
+                int mokinioNumeris = 0;
+
+                while (true) {
+                    cout << "Iveskite salinamo mokinio numeri nuo 1 iki "
+                         << mokiniuKiekis << " (0 - grizti i meniu): ";
+
+                    if (!(cin >> mokinioNumeris)) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Klaida: reikia ivesti sveikaji skaiciu.\n";
+                        continue;
+                    }
+
+                    if (mokinioNumeris == 0) {
+                        break;
+                    }
+
+                    if (mokinioNumeris < 1 || mokinioNumeris > mokiniuKiekis) {
+                        cout << "Neteisingas mokinio numeris. Iveskite skaiciu nuo 1 iki "
+                             << mokiniuKiekis << ".\n";
+                        continue;
+                    }
+
+                    break;
+                }
+
+                if (mokinioNumeris == 0) {
+                    break;
+                }
+
+                int mokinioIndeksas = mokinioNumeris - 1;
+                string pasalintoMokinioVardas = vardai[mokinioIndeksas];
+
+                for (int i = mokinioIndeksas; i < mokiniuKiekis - 1; i++) {
+                    vardai[i] = vardai[i + 1];
+                    pazymiuKiekiai[i] = pazymiuKiekiai[i + 1];
+
+                    for (int j = 0; j < MAX_PAZYMIAI; j++) {
+                        pazymiai[i][j] = pazymiai[i + 1][j];
+                    }
+                }
+
+                int paskutinisIndeksas = mokiniuKiekis - 1;
+                vardai[paskutinisIndeksas] = "";
+                pazymiuKiekiai[paskutinisIndeksas] = 0;
+
+                for (int j = 0; j < MAX_PAZYMIAI; j++) {
+                    pazymiai[paskutinisIndeksas][j] = 0;
+                }
+
+                mokiniuKiekis--;
+                cout << "Mokinys " << pasalintoMokinioVardas
+                     << " sekmingai pasalintas.\n";
                 break;
+            }
 
             case 7:
                 cout << "Programa baigiama.\n";
